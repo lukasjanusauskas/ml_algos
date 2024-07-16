@@ -9,5 +9,6 @@ void print_columns(rapidcsv::Document df);
 std::vector<std::string> get_datasets();
 void print_datasets();
 std::vector<int> get_columns(rapidcsv::Document df);
+float** parse_into_array(rapidcsv::Document df, int* columns);
 
 #endif

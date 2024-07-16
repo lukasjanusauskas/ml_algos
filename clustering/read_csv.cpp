@@ -3,12 +3,6 @@
 #include <vector>
 #include "rapidcsv.h"
 
-rapidcsv::Document get_user_dataset();
-void print_columns(rapidcsv::Document df);
-std::vector<std::string> get_datasets();
-void print_datasets();
-std::vector<int> get_columns(rapidcsv::Document df);
-
 void print_datasets(){
     std::cout << "Possible datasets:\n";
     int code = system("ls data");

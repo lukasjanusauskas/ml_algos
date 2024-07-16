@@ -3,6 +3,7 @@ project(clustering)
 
 set(SOURCE_FILES
 	read_csv.cpp
+	kmeans.cpp
 	main.cpp)
 
 
