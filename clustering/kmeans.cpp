@@ -1,54 +1,78 @@
 #include "read.h"
 #include "kmeans.h"
 
+#include<time.h>
+#include <algorithm>
+#include<random>
+#include<set>
+
 KMeans::KMeans(int k){
-    k = k;     
+    this->k = k;     
 }
 
-float KMeans::sq_distance(float* set1, float* set2){
-    // Calculate teh lengths of the arrays
-    int len1 = sizeof(set1) / sizeof(set1[0]);
-    int len2 = sizeof(set1) / sizeof(set2[0]);
-
-    // Check, if they are the same size
-    if (len1 != len2)
-        exit(EXIT_FAILURE);
-
+float KMeans::sq_distance(float* set1, float* set2, int length){
     // Calculate the square distance between them
     float res = 0;
-    for (int i = 0; i < len1; i++)
+    for (int i = 0; i < length; i++)
         res += (set1[i] - set2[i]) * (set1[i] - set2[i]);
 
     return res;
 }
 
-float** KMeans::sq_distance(float** points, int length, int height){
-    // Allocate two dimensional array for dist
-    float** dist = (float**)malloc(length * sizeof(float*));
-    for(int i = 0; i < length; i++) 
-        dist[i] = (float*)malloc(length * sizeof(float));
+int* KMeans::generate_indices(int max){
+    srand(time(NULL));
+    std::set<int> indices;
 
-    // Calculate distances
-    for (int i = 0; i < length; i++){
-        for (int j = i; j < length; j++){
-            dist[i][j] = sq_distance(points[i], points[j]);
-            dist[j][i] = dist[i][j];
-        }
-    }
+    for(int i = 0; i < this->k; i++)
+        indices.insert(rand() % max);
 
-    return dist;
+    int* index_array = new int[this->k];
+
+    int i = 0;
+    for(int index: indices)
+        index_array[i++] = index;
+
+    return index_array;
 }
 
-// TODO: wriet implementations of these functions
+std::vector<int> KMeans::label_points(array_wsize points, int* k_indices){
+    std::vector<int> labels;
+    float* k_candidates = new float[this->k];
 
-// float KMeans::variance(float** points, int* labels);
-// int* KMeans::generate_indices();
-// int* KMeans::label_points(float** points, int* k_indices);
-// float** KMeans::return_values(float** points, int* k_indices);
+    for(int arr_ind = 0; arr_ind < points.nrow; arr_ind++){
+        // Calculates distances between cluster point and the arr_ind'th point
+        for(int i = 0; i < this->k; i++)
+            k_candidates[i] = sq_distance(points.arr[arr_ind], 
+                                          points.arr[k_indices[i]],
+                                          points.ncol);
+
+        // Basically, argmin. Gets the index of the minimal value
+        int argmin = std::min_element(k_candidates, k_candidates+(this->k)) - k_candidates;
+        labels.push_back(argmin);
+    }
+
+    return labels;
+}
+
+float KMeans::variance(array_wsize points, std::vector<int> labels){
+    int* counts = new int[this->k];
     
-// TODO: after writing the implementations, finidh and test this function
+    // I didn't know, what I was doing
+    // float* first_moments = new float[this->k];
+    // float* second_moments = new float[this->k];
 
-// float** KMeans::fit(float** points, int n){
+    for(int i = 0; i < points.nrow; i++){
+        int label = labels.at(i);
+        counts[label]++;
+    }
+
+    return 0;
+}
+
+// TODO: Finish the final function and fix the fit function
+// float** KMeans::set_values(array_wsize points, int* k_indices);
+
+// float** KMeans::fit(arr_wsize points, int n){
 //     if(n == -1)
 //         n = sizeof(points) / sizeof(points[0]);
 
