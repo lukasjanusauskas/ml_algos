@@ -35,39 +35,48 @@ int* KMeans::generate_indices(int max){
     return index_array;
 }
 
+int arr_argmin(float* arr, int arr_size){
+    return std::min_element(arr, arr+arr_size) - arr;
+}
+
 std::vector<int> KMeans::label_points(array_wsize points, int* k_indices){
     std::vector<int> labels;
     float* k_candidates = new float[this->k];
+    float** data = points.arr;
 
     for(int arr_ind = 0; arr_ind < points.nrow; arr_ind++){
         // Calculates distances between cluster point and the arr_ind'th point
         for(int i = 0; i < this->k; i++)
-            k_candidates[i] = sq_distance(points.arr[arr_ind], 
-                                          points.arr[k_indices[i]],
-                                          points.ncol);
+            k_candidates[i] = sq_distance(data[arr_ind], data[k_indices[i]], points.ncol);
 
-        // Basically, argmin. Gets the index of the minimal value
-        int argmin = std::min_element(k_candidates, k_candidates+(this->k)) - k_candidates;
+        int argmin = arr_argmin(k_candidates, this->k);
         labels.push_back(argmin);
     }
 
     return labels;
 }
 
-float KMeans::variance(array_wsize points, std::vector<int> labels){
-    int* counts = new int[this->k];
-    
-    // I didn't know, what I was doing
-    // float* first_moments = new float[this->k];
-    // float* second_moments = new float[this->k];
+// void label_counts(int size, std::vector<int> labels, int* output_array){
+//     for(int i = 0; i < size; i++){
+//         int label = labels.at(i);
+//         output_array[label]++;
+//     }
+// }
 
-    for(int i = 0; i < points.nrow; i++){
-        int label = labels.at(i);
-        counts[label]++;
-    }
+// void calculate_first_moments(int size, std::vector<int> labels, int* counts, int* output_array){
+//     for(int i = 0; i < size; i++){
 
-    return 0;
-}
+//     }
+// }
+
+// float KMeans::variance(array_wsize points, std::vector<int> labels){
+//     int* counts = new int[this->k];
+//     float* first_moments = new float[this->k];
+//     float* second_moments = new float[this->k];
+
+
+//     return 0;
+// }
 
 // TODO: Finish the final function and fix the fit function
 // float** KMeans::set_values(array_wsize points, int* k_indices);

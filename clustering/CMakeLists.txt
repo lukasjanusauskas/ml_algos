@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 project(clustering)
 
 set(SOURCE_FILES
-	read_csv.cpp
-	kmeans.cpp
-	main.cpp)
+	src/read_csv.cpp
+	src/kmeans.cpp
+	src/main.cpp)
 
 
 find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)

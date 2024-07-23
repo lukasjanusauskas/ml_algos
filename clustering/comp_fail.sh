@@ -1,1 +1,0 @@
-cmake --build . && cd .. && ./build/clustering

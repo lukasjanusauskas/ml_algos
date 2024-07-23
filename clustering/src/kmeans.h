@@ -4,6 +4,10 @@ class KMeans{
 private:
     float** values;
     float sq_distance(float* set1, float* set2, int length);
+    int arr_argmin(float* arr, int arr_size);
+    void label_counts(int size, std::vector<int> labels, int* output_array);
+    void calculate_first_moments(int size, std::vector<int> labels, int* counts, int* output_array);
+    void calculate_second_moments(int size, std::vector<int> labels, int* counts, float* means, int* output_array);
 
 public:
     int k;
